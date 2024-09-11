@@ -4,25 +4,24 @@ import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL;
   const { register, handleSubmit } = useForm();
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState([]);
 
   async function fetchProducts() {
-    const data = await fetch(`${apiBaseUrl}/product`);
+    const data = await fetch("http://localhost:3000/api/product");
     const p = await data.json();
     setProducts(p);
   }
 
   async function fetchCategory() {
-    const data = await fetch(`${apiBaseUrl}/category`);
+    const data = await fetch("http://localhost:3000/api/category");
     const c = await data.json();
     setCategory(c);
   }
 
   const createProduct = (data) => {
-    fetch(`${apiBaseUrl/product}`, {
+    fetch("http://localhost:3000/api/product", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -34,7 +33,7 @@ export default function Home() {
   const deleteById = (id) => async () => {
     if (!confirm("Are you sure?")) return;
     
-    await fetch(`${apiBaseUrl}/product/${id}`, {
+    await fetch(`http://localhost:3000/api/product/${id}`, {
       method: "DELETE",
     });
     fetchProducts();

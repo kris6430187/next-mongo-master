@@ -3,15 +3,24 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 
-export default function Home() {
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL;
-  const [categoryList, setCategoryList] = useState([]);
-  const { register, handleSubmit } = useForm();
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import Avatar from "@mui/material/Avatar";
+import ImageIcon from "@mui/icons-material/Image";
+import WorkIcon from "@mui/icons-material/Work";
+import BeachAccessIcon from "@mui/icons-material/BeachAccess";
 
+export default function Home() {
+  const [category, setCategory] = useState([]);
+  const { register, handleSubmit } = useForm();
+  const API_BASE = process.env.NEXT_PUBLIC_API_BASE
+  console.log(`${API_BASE}/category`)
   async function fetchCategory() {
-    const data = await fetch(`${apiBaseUrl}/category`);
+    const data = await fetch(`${API_BASE}/category`);
     const c = await data.json();
-    setCategoryList(c);
+    setCategory(c);
   }
 
   useEffect(() => {
@@ -19,7 +28,7 @@ export default function Home() {
   }, []);
 
   function createCategory(data) {
-    fetch(`${apiBaseUrl}/category`, {
+    fetch(`${API_BASE}/category`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -50,15 +59,24 @@ export default function Home() {
           </div>
         </div>
       </form>
-      <div>
-        <h1>Category ({categoryList.length})</h1>
-        {categoryList.map((category) => (
-          <div key={category._id}>
-            <Link href={`/product/category/${category._id}`} className="text-red-600">
-              {category.name}
-            </Link>
-          </div>
-        ))}
+      <div className="mx-4">
+        <h1>Category ({category.length})</h1>
+        <List>
+          {category.map((category) => (
+            <ListItem key={category._id}>
+              <ListItemAvatar>
+                <Avatar>
+                  <WorkIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText>
+                  {category.name}
+                <Link href={`/product/category/${category._id}`} className="text-red-600">
+                </Link>
+              </ListItemText>
+            </ListItem>
+          ))}
+        </List>
       </div>
     </main>
   );
